@@ -116,3 +116,5 @@ then
 
 Create our_first_dag.py like in tutorial repo
 
+Have to reload the browser to see changes
+
