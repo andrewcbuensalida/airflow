@@ -139,3 +139,23 @@ To exit the container
 ======================================
 
 crontab.guru helps in creating cron expressions
+
+======================================
+
+To see connections, like to postgres, go to admin/connections in the ui
+
+Add port 5432 to docker-compose.yaml for postgres
+
+To rebuild the postgres container
+  docker-compose up -d --no-deps --build postgres
+
+open dbeaver and use airflow as username and password in a new postgres connection
+
+create a database named test
+
+In airflow ui, in admin connections, add a connection with Connection Id = postgres_localhost
+Connection type = Postgres
+Schema = test
+Username and password is = airflow
+port = 5432
+host = host.docker.internal // if it's not through docker, should be postgres, which comes from the service name in docker-compose.yaml, or localhost
