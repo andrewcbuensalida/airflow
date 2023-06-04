@@ -118,3 +118,20 @@ Create our_first_dag.py like in tutorial repo
 
 Have to reload the browser to see changes
 
+================================================
+
+How to manually backfill aka run tasks that were supposed to run in the past.
+
+Check the containers with
+  docker ps
+
+Then open the container interactively, aka cli will stay in the container, with
+  docker exec -it 0fea210a7334 bash
+
+In the container, start the backfill with
+  airflow dags backfill -s 2023-06-01 -e 2023-06-10 dag_with_catchup_backfill_v02
+
+-s for start, -e for end date
+
+To exit the container
+  exit
