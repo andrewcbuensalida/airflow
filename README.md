@@ -1,5 +1,8 @@
 https://www.youtube.com/watch?v=K9AnJ9_ZAXE&list=PLwFJcsJ61oujAqYpMp1kdUBcPG0sE0QMT&index=1&t=2615s
 
+course repo
+https://github.com/coder2j/airflow-docker
+
 python venv did not work because I have windows
 ====================================================
 install docker desktop
@@ -98,4 +101,18 @@ in browser, go to http://localhost:8080/ and enter "airflow" as username and pas
 
 add a .gitignore like this
   https://github.com/apache/airflow/blob/main/.gitignore
+
+to shutdown containers
+  docker-compose down -v
+dash v means remove the volumes also
+have to do this command in the same cli where you did docker-compose up -d
+
+In docker-compose.yaml, change AIRFLOW__CORE__LOAD_EXAMPLES to false
+
+Then do this again
+  docker compose up airflow-init
+then
+  docker-compose up -d
+
+Create our_first_dag.py like in tutorial repo
 
