@@ -96,3 +96,6 @@ to check running containers
 
 in browser, go to http://localhost:8080/ and enter "airflow" as username and password
 
+add a .gitignore like this
+  https://github.com/apache/airflow/blob/main/.gitignore
+
