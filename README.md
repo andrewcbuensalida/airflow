@@ -181,3 +181,35 @@ To check if dependencies are there, create dag_with_python_dependencies.py
 
 Rebuild webserver and scheduler containers with
   docker-compose up -d --no-deps --build airflow-webserver airflow-scheduler
+
+================================
+second way (not working) to install python dependencies is customizing the airflow image
+  git clone https://github.com/apache/airflow.git
+
+In that repo, look for docker-context-files folder and create a requirements.txt with
+  scikit-learn==0.24.2
+  matplotlib==3.3.3
+
+Then build the image with
+  docker build . --build-arg AIRFLOW_VERSION='2.6.1' --tag customising_airflow:latest
+
+Errored with 
+  => ERROR [airflow-build-image  3/15] RUN bash /scripts/docker/install_os_dependencies.sh dev                                                                               0.8s 
+  => ERROR [main  3/15] RUN bash /scripts/docker/install_os_dependencies.sh runtime                                                                                          0.7s 
+  ------
+  > [airflow-build-image  3/15] RUN bash /scripts/docker/install_os_dependencies.sh dev:
+  : invalid option nameker/install_os_dependencies.sh: line 1: set: pipefail
+  ------
+  ------
+  > [main  3/15] RUN bash /scripts/docker/install_os_dependencies.sh runtime:
+  : invalid option nameker/install_os_dependencies.sh: line 1: set: pipefail
+  ------
+  Dockerfile:1327
+  --------------------
+  1325 |
+  1326 |     COPY --from=scripts install_os_dependencies.sh /scripts/docker/
+  1327 | >>> RUN bash /scripts/docker/install_os_dependencies.sh runtime
+  1328 |
+  1329 |     # Having the variable in final image allows to disable providers manager warnings when
+  --------------------
+  ERROR: failed to solve: process "/bin/bash -o pipefail -o errexit -o nounset -o nolog -c bash /scripts/docker/install_os_dependencies.sh runtime" did not complete successfully: exit code: 2

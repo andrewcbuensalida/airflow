@@ -12,7 +12,7 @@ default_args = {
 
 
 def get_sklearn():
-    import sklearn
+    import sklearn # can import because of requirements.txt which Dockerfile installed when creating the extending_airflow:latest image
     print(f"sklearn with version: {sklearn.__version__} ")
 
 
