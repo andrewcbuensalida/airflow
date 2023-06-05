@@ -155,10 +155,10 @@ create a database named test
 
 In airflow ui, in admin connections, add a connection with Connection Id = postgres_localhost
 Connection type = Postgres
+host = host.docker.internal // if it's not through docker, should be postgres, which comes from the service name in docker-compose.yaml, or localhost
 Schema = test
 Username and password is = airflow
 port = 5432
-host = host.docker.internal // if it's not through docker, should be postgres, which comes from the service name in docker-compose.yaml, or localhost
 
 The test database disappears when containers are stopped
 
@@ -269,3 +269,32 @@ When clicking test, get an error but doesn't seem to matter
   'ClientError' error occurred while testing connection: An error occurred (InvalidClientTokenId) when calling the GetCallerIdentity operation: The security token included in the request is invalid.
 
 in either play.min.io or localhost minio, create a bucket named airflow and upload data.csv to it
+
+run the dag
+
+==================================================
+
+hooks s3 postgres
+in dbeaver in test database, create a new table with
+  create table if not exists public.orders (
+    order_id character varying,
+    date date,
+    product_name character varying,
+    quantity integer,
+    primary key(order_id)
+  )
+
+right click orders table and import from Orders.csv
+
+check the postgres version in the airflow scheduler container
+first get the container id of the scheduler with
+  docker ps
+then put it in
+  docker exec -it f275c57c8a40 bash
+once in the container, show the version
+  pip list | grep postgres
+check airflow documentation providers packages https://airflow.apache.org/docs/
+
+select the correct postgres version, then click python api, then copy the package name
+
+If there's no postgres connection in airflow ui admin/connection, follow previous instructions

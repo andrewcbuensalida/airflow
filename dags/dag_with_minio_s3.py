@@ -18,7 +18,7 @@ with DAG(
         bucket_name="airflow",  # should be the same in minio and aws
         bucket_key="data.csv",  # this watches for changes of the file in s3
         aws_conn_id="minio_s3_conn",
-        mode="poke",
-        poke_interval=5,
-        timeout=30,
+        mode="poke", # poke is default. basically polling.
+        poke_interval=5, # checks if data.csv is in bucket every 5 seconds
+        timeout=30, # will timeout after 30 seconds
     )
