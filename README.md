@@ -213,3 +213,59 @@ Errored with
   1329 |     # Having the variable in final image allows to disable providers manager warnings when
   --------------------
   ERROR: failed to solve: process "/bin/bash -o pipefail -o errexit -o nounset -o nolog -c bash /scripts/docker/install_os_dependencies.sh runtime" did not complete successfully: exit code: 2
+
+===================================================
+
+s3 sensor with minio
+sensors run a task when it is triggered by an event, not cron
+minio is a software that uploads files to s3
+https://min.io/docs/minio/container/index.html
+create a minio container
+  docker run -p 9000:9000 -p 9090:9090 --name minio1 -v C:\minio\data:/data -e "MINIO_ROOT_USER=ROOTUSER" -e "MINIO_ROOT_PASSWORD=CHANGEME123" quay.io/minio/minio server /data --console-address ":9090"
+
+docker run starts the MinIO container.
+
+-p binds a local port to a container port.
+
+-v sets a file path as a persistent volume location for the container to use. When MinIO writes data to /data, that data mirrors to the local path D:\minio\data, allowing it to persist between container restarts. You can replace D:\minio\data with another local file location to which the user has read, write, and delete access.
+
+-e sets the environment variables MINIO_ROOT_USER and MINIO_ROOT_PASSWORD, respectively. These set the root user credentials. Change the example values to use for your container.
+
+Then paste the offline console url, and use the MINIO_ROOT_USER and MINIO_ROOT_PASSWORD. 
+
+create bucket and name = airflow
+create data.csv and drag into bucket
+
+check the airflow amazon version in the container
+first get the container id of the scheduler with
+  docker ps
+then put it in
+  docker exec -it f275c57c8a40 bash
+once in the container, show the version
+  pip list | grep amazon
+
+In airflow documentation provider packages
+https://airflow.apache.org/docs/apache-airflow-providers-amazon/8.0.0/index.html
+change the version to the correct version
+click airflow.providers.amazon.aws.sensors.s3
+copy the package name and import it in dag_with_minio_s3.py
+In airflow ui admin/connections, 
+  connection id = minio_s3_conn
+  Connection type = Amazon Web Services <- s3 isn't there in newer versions, so follow https://www.youtube.com/watch?v=sVNvAtIZWdQ
+  if connecting to local minio
+  extra = {
+    "aws_access_key_id": "ROOTUSER", <-from MINIO_ROOT above
+    "aws_secret_access_key": "CHANGEME123", <- from MINIO_ROOT_PASSWORD
+    "endpoint_url": "http://host.docker.internal:9000"
+  }
+  if connecting to play.min.io
+  extra = {
+    "aws_access_key_id": "asdf", <-this comes from creating access key in play.min.io. check .env https://www.youtube.com/watch?v=sVNvAtIZWdQ. To login, username and password is minioadmin
+    "aws_secret_access_key": "asdf",
+    "endpoint_url": "https://play.min.io:9000" <- from minio browser root url
+  }
+
+When clicking test, get an error but doesn't seem to matter
+  'ClientError' error occurred while testing connection: An error occurred (InvalidClientTokenId) when calling the GetCallerIdentity operation: The security token included in the request is invalid.
+
+in either play.min.io or localhost minio, create a bucket named airflow and upload data.csv to it
