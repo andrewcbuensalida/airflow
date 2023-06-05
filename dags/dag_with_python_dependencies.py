@@ -24,7 +24,7 @@ def get_matplotlib():
 with DAG(
     default_args=default_args,
     dag_id="dag_with_python_dependencies_v03",
-    start_date=datetime(2021, 10, 12),
+    start_date=datetime(2023, 6, 1),
     schedule_interval='@daily'
 ) as dag:
     task1 = PythonOperator(

@@ -159,3 +159,25 @@ Schema = test
 Username and password is = airflow
 port = 5432
 host = host.docker.internal // if it's not through docker, should be postgres, which comes from the service name in docker-compose.yaml, or localhost
+
+The test database disappears when containers are stopped
+
+===================================
+2 ways of installing python dependencies
+
+1 extending image
+create a requirements.txt
+
+create a Dockerfile
+
+In command line
+  docker build . --tag extending_airflow:latest
+This builds an image using the Dockerfile in the current directory . and tag it with extending_airflow:latest
+
+In docker-compose.yaml, change AIRFLOW_IMAGE_NAME:-apache/airflow:2.6.1 to
+  AIRFLOW_IMAGE_NAME:-extending_airflow:latest
+
+To check if dependencies are there, create dag_with_python_dependencies.py
+
+Rebuild webserver and scheduler containers with
+  docker-compose up -d --no-deps --build airflow-webserver airflow-scheduler
