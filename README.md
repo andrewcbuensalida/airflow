@@ -1,5 +1,7 @@
 https://www.youtube.com/watch?v=K9AnJ9_ZAXE&list=PLwFJcsJ61oujAqYpMp1kdUBcPG0sE0QMT&index=1&t=2615s
 
+lucid chart design diagram https://lucid.app/lucidchart/16d321fb-7bbb-4b4c-a57e-7ef3a9851788/edit?viewport_loc=-363%2C277%2C2268%2C1378%2C0_0&invitationId=inv_5172beb0-1b9f-4de3-b32c-bb4a4399580b
+
 course repo
 https://github.com/coder2j/airflow-docker
 
